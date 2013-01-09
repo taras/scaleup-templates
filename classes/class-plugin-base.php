@@ -5,9 +5,9 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
 
         private static $_this;
 
-        private $templates = array();
+        private static $_templates = array();
 
-        private $_posts = array();
+        private static $_posts = array();
 
         function __construct() {
             self::$_this = $this;
@@ -16,13 +16,11 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
 
         static function template_include( $template ) {
 
-            $instance = ScaleUp_Templates_Plugin::this();
-
-            if ( ( is_single() || is_page() ) && $instance->has_template( get_the_ID() ) ) {
+            if ( ( is_single() || is_page() ) && self::$_this->has_template( get_the_ID() ) ) {
                 $located_template = '';
-                $scaleup_template = $instance->get_template( get_the_ID() );
+                $scaleup_template = self::$_this->get_template( get_the_ID() );
                 if ( $scaleup_template )
-                    $located_template = $instance->locate_template( $scaleup_template );
+                    $located_template = self::$_this->locate_template( $scaleup_template );
                 if ( $located_template )
                     $template = $located_template;
             }
@@ -55,8 +53,8 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
          */
         function get( $template_name ) {
 
-            if ( isset( $this->templates[ $template_name ] ) ) {
-                return $this->templates[ $template_name ];
+            if ( isset( $this->_templates[ $template_name ] ) ) {
+                return $this->_templates[ $template_name ];
             }
             return false;
         }
@@ -78,7 +76,7 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
          * @return bool
          */
         function has_template( $post_id ) {
-            return ( !empty( $this->_posts ) && in_array( $post_id, array_keys( $this->_posts ) ) );
+            return ( !empty( self::$_this->_posts ) && in_array( $post_id, array_keys( self::$_this->_posts ) ) );
         }
 
         /**
@@ -91,9 +89,9 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
          * @return array|false array containing path and template or false if not found
          */
         function get_template( $post_id ) {
-            if ( isset( $this->_posts[ $post_id ] ) ) {
-                $template = $this->_posts[ $post_id ];
-                $template = $this->templates[ $template ];
+            if ( isset( self::$_this->_posts[ $post_id ] ) ) {
+                $template = self::$_this->_posts[ $post_id ];
+                $template = self::$_this->_templates[ $template ];
                 return $template;
             }
             return false;
@@ -137,7 +135,7 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
          * @param $template_name string prefix with / forward slash
          */
         function register( $path, $template_name ) {
-            $this->templates[ $template_name ] = array(
+            $this->_templates[ $template_name ] = array(
                 'path'      => $path,
                 'template'  => $template_name
             );
