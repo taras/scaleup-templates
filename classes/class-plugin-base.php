@@ -31,6 +31,38 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
         }
 
         /**
+         * Callback function for get_template_part_$slug hook
+         * Includes requested template
+         *
+         * @param $template_name
+         */
+        static function get_template_part( $template_name ) {
+
+            $instance = ScaleUp_Templates_Plugin::this();
+            $template = $instance->get( $template_name );
+
+            if ( $instance->template_exists( $template ) ) {
+                $template_path = $instance->select( $template );
+                include( $template_path );
+            }
+
+        }
+
+        /**
+         * Return template by name
+         *
+         * @param $template_name
+         * @return array|false
+         */
+        function get( $template_name ) {
+
+            if ( isset( $this->templates[ $template_name ] ) ) {
+                return $this->templates[ $template_name ];
+            }
+            return false;
+        }
+
+        /**
          * Apply a specific template to a post
          *
          * @param $post_id int
@@ -110,6 +142,7 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
                 'path'      => $path,
                 'template'  => $template
             );
+            add_action( "get_template_part_$template", array( $this, 'get_template_part') );
         }
 
         static function this(){

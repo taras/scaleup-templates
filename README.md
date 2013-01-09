@@ -1,45 +1,68 @@
 # ScaleUp Templates Plugin for WordPress
 
-* This plugin is in concept stage - do not use. *
+**This plugin is under active development and API will change. All feedback is welcome.**
 
-This plugin was designed for Site Builders and Theme Developers. This plugin is not designed for regular WordPress users.
+ScaleUp Templates provides an API that allows plugin developers to include templates with their plugins.
+Site Builders can include these templates using get_template_part or by applying a template to a post.
 
-ScaleUp Templates Plugin will provide a collection of useful page templates. These templates can be overwritten in parent
-and child theme the same way that you would usually overwrite a parent template in child theme.
+See if you can read the following code to check if this plugin is for you:
 
-## How to use this plugin?
+    if ( in_array( $you, array( 'Theme Developer', 'Site Builder') ) ) {
+        echo 'This plugin is for you!';
+    }
 
-After you installed this plugin, you can use a global $scaleup_templates variable to call apply method to apply this
-plugin's template to the post.
+## As a plugin developer: How do I include a template to be used by a Site Builder?
 
-Here is a complete example for a child theme of Twentytwelve theme
+1. Create a template file somewhere in your plugin directory. This template can be in your plugins root or sub directory.
+2. Hook a callback function to after_setup_theme hook with the following code:
 
-    global $scaleup_templates;
+```php
+function yourprefix_after_setup_theme() {
+    // get instance of ScaleUp Templates plugin
+    $scaleup_templates = ScaleUp_Templates_Plugin::this();
 
-    // apply method takes two parameters: post_id and name of the template from the theme.
-    $scaleup_templates->apply( 2, '/one-page.php' );
+    // when scaleup_templates plugin is installed
+    if ( $scaleup_templates ) {
+        // register your template by providing path to your template and template name
+        $scaleup_templates->register( dirname( __FILE__ ), '/your-template.php' );
+    }
+}
+add_action( 'after_setup_theme', 'yourprefix_after_setup_theme' );
+```
 
-You can overwrite the output of this template by copying this template from the plugin into your child directory and modifying it.
-After you copied the template file, WordPress will automatically use the template from your child theme instead of the plugin directory.
+*Note*: template_name must start with forward slash / and end with php extension. Template name is what Site Builder will
+need to use with get_template_part. If you place your template into a sub directory then you can include in template name
+or include it as part of the $path.
+
+*Note 2*: If you're prefixing your callback functions, then I highly recommend that you read Mike Schinkel's [Using Classes as Code Wrappers for WordPress Plugins](http://hardcorewp.com/2012/using-classes-as-code-wrappers-for-wordpress-plugins/) and [Enabling Action and Filter Hook Removal from Class-based WordPress Plugins](http://hardcorewp.com/2012/enabling-action-and-filter-hook-removal-from-class-based-wordpress-plugins/) on [HardcoreWP.com](http://hardcorewp.com)
+
+*Note 3*: Please, tell your users that you're using ScaleUp Theme to provide a way to overwrite your templates so they'll how to use them :)
+
+## As a Site Builder: How do I use a template that's provided by a plugin that uses ScaleUp Templates?
+
+1. Install ScaleUp Templates Plugin on your site
+2. In your theme's functions.php file, use get_template_part to call the template that you want
+
+```php
+get_template_part( '/templatename.php' );
+```
+
+*Note:* Template Name starts with forward slash /
+
+If you want to load the template when a post loads without using get_template_part then you can use the **$scaleup_templates->apply(** *$post_id* **,** *$template_name* **)**
+
+```php
+global $scaleup_templates;
+$scaleup_templates->apply( 2, '/templatename.php' );
+```
+
+## As a Site Builder: How do I overwrite a plugin's template?
+
+You can overwrite a template that's provided by a plugin in the parent or child theme by copying the template from the plugin into the theme.
+
+If template name contains a directory then you must create that directory in your theme.
 
 ## Why did you create this plugin?
 
-At the moment, there is no good way of reusing page layouts from one project to another. This plugin will provide some
-useful templates. More importantly, if this pattern validates then this plugin could be an example of how other
-plugin could provide templates that developers could overwrite in the parent. I could also package this as a library and
-enable theme developers to create their own plugins with collections of templates that they can reuse on projects.
-
-## What API does this plugin provide?
-
-This plugin provides an API that allows a WordPress Developer to add hi/her own templates that can be overwritten in the theme.
-To do this, create the developer would have to create a plugin hooks to plugins_loaded and calls a function that does the following:
-
-    global $scaleup_templates;
-
-    // register method takes path and template as parameters. 2nd parameter must be prefixed with /
-    $scaleup_templates->register( dirname( __FILE__ ), '/your-template.php' );
-
-    // you can also include templates in subdirectories
-    $scaleup_templates->register( dirname( __FILE__ ), '/neat/mytemplate.php' );
-
+There is no standard way of including templates in a plugin. This makes it difficult to create sites that leverage plugins that were developed by other developers. 
 
