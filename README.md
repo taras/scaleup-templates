@@ -7,7 +7,7 @@ ScaleUp Templates provides an API that allows plugin developers to include templ
 See if you can read the following code to check if this plugin is for you:
 
 ```php
-if ( in_array( $you, array( 'Plugin developer', 'Theme developer', 'Site builder' ) ) {
+if ( in_array( $you, array( 'plugin developer', 'theme developer', 'site builder' ) ) {
     echo 'This plugin is for you!';
 }
 ```
@@ -21,18 +21,16 @@ if ( in_array( $you, array( 'Plugin developer', 'Theme developer', 'Site builder
 
 ```php
 function yourprefix_after_setup_theme() {
-    // get instance of ScaleUp Templates plugin
-    $scaleup_templates = ScaleUp_Templates_Plugin::this();
 
-    // when scaleup_templates plugin is installed
-    if ( $scaleup_templates ) {
-        // register your template by providing path to your template and template name
-        $scaleup_templates->register( dirname( __FILE__ ), '/your-template.php' );
+	if ( function_exists( 'register_scaleup_template' ) ) {
+         // register your template by providing path to your template and template name
+        register_scaleup_template( dirname( __FILE__ ), '/your-template.php' );
         
 		// you can register as many templates as you need. For example:
-		$scaleup_templates->register( dirname( __FILE__ ), '/contact/form.php' );
-		$scaleup_templates->register( dirname( __FILE__ ), '/contact/page.php' );
+		register_scaleup_template( dirname( __FILE__ ), '/contact/form.php' );
+		register_scaleup_template( dirname( __FILE__ ), '/contact/page.php' );
     }
+    
 }
 add_action( 'after_setup_theme', 'yourprefix_after_setup_theme' );
 ```
@@ -41,11 +39,11 @@ add_action( 'after_setup_theme', 'yourprefix_after_setup_theme' );
 need to use with get_template_part. If you place your template into a sub directory then you can include in template name
 or include it as part of the $path.
 
-*Note 2*: If you're prefixing your callback functions, then I highly recommend that you read Mike Schinkel's [Using Classes as Code Wrappers for WordPress Plugins](http://hardcorewp.com/2012/using-classes-as-code-wrappers-for-wordpress-plugins/) and [Enabling Action and Filter Hook Removal from Class-based WordPress Plugins](http://hardcorewp.com/2012/enabling-action-and-filter-hook-removal-from-class-based-wordpress-plugins/) on [HardcoreWP.com](http://hardcorewp.com)
+*Note 2*: If you're prefixing your callback functions, then I highly recommend that you read Mike Schinkel's [Using Classes as Code Wrappers for WordPress Plugins](http://hardcorewp.com/2012/using-classes-as-code-wrappers-for-wordpress-plugins/) and [Enabling Action and Filter Hook Removal from Class-based WordPress Plugins](http://hardcorewp.com/2012/enabling-action-and-filter-hook-removal-from-class-based-wordpress-plugins/) on [HardcoreWP.com](http://hardcorewp.com). You can find an example of class wrapped plugin in [ScaleUp Templates Test Plugin Repository](https://github.com/wrktg/scaleup-templates-tests/blob/master/scaleup-templates-tests.php)
 
 *Note 3*: Please, tell your users that you're using ScaleUp Templates to provide a way to overwrite your templates so they'll know how to use them :)
 
-## For site builders and theme developers
+## For theme developers and site builders
 
 ### How do I use a template that's provided by a plugin that uses ScaleUp Templates?
 
@@ -61,8 +59,9 @@ get_template_part( '/templatename.php' );
 If you want to load the template when a post loads without using get_template_part then you can use the **$scaleup_templates->apply(** *$post_id* **,** *$template_name* **)**
 
 ```php
-global $scaleup_templates;
-$scaleup_templates->apply( 2, '/templatename.php' );
+if ( function_exists( 'apply_scaleup_template' ) ) {
+	apply_scaleup_template( 2, '/templatename.php' );
+}
 ```
 
 ### How do I overwrite a plugin's template?

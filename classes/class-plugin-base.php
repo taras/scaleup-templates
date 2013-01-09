@@ -135,14 +135,14 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
         /**
          * Register a template at specified path to ScaleUp Templates
          * @param $path string absolute path prefix to $template ( without trailing slash )
-         * @param $template string prefix with / forward slash
+         * @param $template_name string prefix with / forward slash
          */
-        function register( $path, $template ) {
-            $this->templates[ $template ] = array(
+        function register( $path, $template_name ) {
+            $this->templates[ $template_name ] = array(
                 'path'      => $path,
-                'template'  => $template
+                'template'  => $template_name
             );
-            add_action( "get_template_part_$template", array( $this, 'get_template_part') );
+            add_action( "get_template_part_$template_name", array( $this, 'get_template_part') );
         }
 
         static function this(){
