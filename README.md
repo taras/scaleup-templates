@@ -28,6 +28,10 @@ function yourprefix_after_setup_theme() {
     if ( $scaleup_templates ) {
         // register your template by providing path to your template and template name
         $scaleup_templates->register( dirname( __FILE__ ), '/your-template.php' );
+        
+		// you can register as many templates as you need. For example:
+		$scaleup_templates->register( dirname( __FILE__ ), '/contact/form.php' );
+		$scaleup_templates->register( dirname( __FILE__ ), '/contact/page.php' );
     }
 }
 add_action( 'after_setup_theme', 'yourprefix_after_setup_theme' );
@@ -67,7 +71,19 @@ You can overwrite a template that's provided by a plugin in the parent or child 
 
 If template name contains a directory then you must create that directory in your theme.
 
-## Why did you create this plugin?
+## General Questions
 
-There is no standard way of including templates in a plugin. This makes it difficult to create sites that leverage plugins that were developed by other developers. I want to make this easier and allow us to leverage each other's work. This plugin is an attempt to do this.
+### What are these templates for?
+
+These templates are regular theme templates like single.php and front-page.php. 
+
+### Why did you create this plugin?
+
+Any plugin that generates front end output needs some way to allow theme developers and site builders to overwrite this output for their specific situation. At the moment, every plugin developer has to write code that provides this functionality. In best case scenario, every plugin will allow the theme developer and site builders to overwrite their output, but this means that we'll have 40,000 different ways of doing this. We're currently in the worse case scenario ;) I'm hoping that this plugin will it easier for plugin developers, theme developers and site builders to work together.
+
+### What do ScaleUp Templates do that get_template_part does not?
+
+Out of the box, get_template_part only finds templates that are in the parent or child theme and it doesn't find templates in the plugins directory.
+
+
 

@@ -2,7 +2,7 @@
 /**
  * Example plugin that can be included in the theme by using $scaleup_templates->apply( $post_id, 'one-page.php' )
  * in theme's functions.php file.
- * 
+ *
  * This example shows all sub pages of the page that it was applied to on 1 page.
  */
 get_header(); ?>
