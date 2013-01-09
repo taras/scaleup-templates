@@ -19,12 +19,12 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
             $instance = ScaleUp_Templates_Plugin::this();
 
             if ( ( is_single() || is_page() ) && $instance->has_template( get_the_ID() ) ) {
-                $selected_template = '';
+                $located_template = '';
                 $scaleup_template = $instance->get_template( get_the_ID() );
                 if ( $scaleup_template )
-                    $selected_template = $instance->select( $scaleup_template );
-                if ( $selected_template )
-                    $template = $selected_template;
+                    $located_template = $instance->locate_template( $scaleup_template );
+                if ( $located_template )
+                    $template = $located_template;
             }
 
             return $template;
@@ -38,11 +38,10 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
          */
         static function get_template_part( $template_name ) {
 
-            $instance = ScaleUp_Templates_Plugin::this();
-            $template = $instance->get( $template_name );
+            $template = self::$_this->get( $template_name );
 
-            if ( $instance->template_exists( $template ) ) {
-                $template_path = $instance->select( $template );
+            if ( self::$_this->template_exists( $template ) ) {
+                $template_path = self::$_this->locate_template( $template );
                 include( $template_path );
             }
 
@@ -86,7 +85,7 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
          * Return template assigned to specific post_id
          *
          * To get the final template after applying Template Hierarchy, you must run the result of thing function on
-         * $this->select function. eg: $this->select( $this->get_template( $post_id ) )
+         * $this->locate_template function. eg: $this->locate_template( $this->get_template( $post_id ) )
          *
          * @param $post_id
          * @return array|false array containing path and template or false if not found
@@ -108,10 +107,10 @@ if ( !class_exists( 'ScaleUp_Templates_Plugin' ) ) {
          *      2. Parent theme template
          *      3. Original template
          *
-         * @param $template array path to selected template
+         * @param $template array path to located template
          * @return string
          */
-        function select( $template ) {
+        function locate_template( $template ) {
 
             $theme_template = $template;
 
