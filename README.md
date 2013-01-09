@@ -36,7 +36,7 @@ or include it as part of the $path.
 
 *Note 2*: If you're prefixing your callback functions, then I highly recommend that you read Mike Schinkel's [Using Classes as Code Wrappers for WordPress Plugins](http://hardcorewp.com/2012/using-classes-as-code-wrappers-for-wordpress-plugins/) and [Enabling Action and Filter Hook Removal from Class-based WordPress Plugins](http://hardcorewp.com/2012/enabling-action-and-filter-hook-removal-from-class-based-wordpress-plugins/) on [HardcoreWP.com](http://hardcorewp.com)
 
-*Note 3*: Please, tell your users that you're using ScaleUp Theme to provide a way to overwrite your templates so they'll how to use them :)
+*Note 3*: Please, tell your users that you're using ScaleUp Theme to provide a way to overwrite your templates so they'll know how to use them :)
 
 ## As a Site Builder: How do I use a template that's provided by a plugin that uses ScaleUp Templates?
 
